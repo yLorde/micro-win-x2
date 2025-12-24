@@ -1,1 +1,4 @@
-qemu-system-x86_64 -cdrom dist/x86_64/kernel.iso
+build: docker build buildenv -t micro-win-x2-buildenv
+enter: docker run --rm -it -v "${pwd}:/root/env" micro-win-x2-buildenv
+make: make build-x86_64
+run: qemu-system-x86_64 -cdrom dist/x86_64/kernel.iso
