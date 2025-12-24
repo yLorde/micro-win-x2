@@ -1,0 +1,1 @@
+docker run --rm -it -v C:\codes\micro-win-x2:/root/env os-buildenv
