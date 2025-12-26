@@ -4,8 +4,8 @@ kernel_object_files := $(patsubst src/impl/kernel/%.c, build/kernel/%.o, $(kerne
 x86_64_c_source_files := $(shell find src/impl/x86_64 -name *.c)
 x86_64_c_object_files := $(patsubst src/impl/x86_64/%.c, build/x86_64/%.o, $(x86_64_c_source_files))
 
-x86_64_asm_source_files := $(shell find src/impl/x86_64 -name *.asm)
-x86_64_asm_object_files := $(patsubst src/impl/x86_64/%.asm, build/x86_64/%.o, $(x86_64_asm_source_files))
+x86_64_asm_source_files := $(shell find src/impl/x86_64 -name *.s)
+x86_64_asm_object_files := $(patsubst src/impl/x86_64/%.s, build/x86_64/%.o, $(x86_64_asm_source_files))
 
 x86_64_object_files := $(x86_64_c_object_files) $(x86_64_asm_object_files)
 
@@ -17,9 +17,9 @@ $(x86_64_c_object_files): build/x86_64/%.o : src/impl/x86_64/%.c
 	mkdir -p $(dir $@) && \
 	x86_64-elf-gcc -c -I src/intf -ffreestanding $(patsubst build/x86_64/%.o, src/impl/x86_64/%.c, $@) -o $@
 
-$(x86_64_asm_object_files): build/x86_64/%.o : src/impl/x86_64/%.asm
+$(x86_64_asm_object_files): build/x86_64/%.o : src/impl/x86_64/%.s
 	mkdir -p $(dir $@) && \
-	nasm -f elf64 $(patsubst build/x86_64/%.o, src/impl/x86_64/%.asm, $@) -o $@
+	nasm -f elf64 $(patsubst build/x86_64/%.o, src/impl/x86_64/%.s, $@) -o $@
 
 .PHONY: build-x86_64
 build-x86_64: $(kernel_object_files) $(x86_64_object_files)

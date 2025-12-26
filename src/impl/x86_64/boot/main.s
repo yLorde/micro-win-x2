@@ -1,10 +1,14 @@
+section .text
+bits 32
+
 global start
 extern long_mode_start
 
-section .textf
-bits 32
 start:
+	; setup stack
 	mov esp, stack_top
+
+	cli
 
 	call check_multiboot
 	call check_cpuid
@@ -125,7 +129,6 @@ error:
 	hlt
 
 section .bss
-
 align 4096
 page_table_l4:
 	resb 4096
@@ -136,11 +139,13 @@ page_table_l2:
 
 stack_bottom:
 	resb 4096 * 4
+
 stack_top:
 
 section .rodata
 gdt64:
 	dq 0 ; zero entry 
+
 .code_segment: equ $ - gdt64
 	dq (1 << 43) | (1 << 44) | (1 << 47) | (1 << 53) ; code segment 
 
